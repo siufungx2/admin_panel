@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth; 
 
 class AuthController extends Controller
@@ -48,5 +49,19 @@ class AuthController extends Controller
                 'token' => $token->accessToken
             ]);
         }
+    }
+
+    public function logout(){
+        $accessToken = auth()->user()->token();
+
+        $refreshToken = DB::table('oauth_refresh_tokens')
+            ->where('access_token_id', $accessToken->id)
+            ->update([
+                'revoked' => true
+            ]);
+
+        $accessToken->revoke();
+
+        return response()->json(['status' => 200]);
     }
 }

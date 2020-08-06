@@ -22,6 +22,7 @@ Route::post('login', 'AuthController@login');
 // });
 
 Route::middleware(['auth:api', 'role'])->group(function() {
+    Route::post('logout', 'AuthController@logout');
     Route::get('/user/{userId}/detail', 'UserController@show');
     Route::middleware(['scope:admin'])->delete('/user/{userId}', 'UserController@delete');
     Route::middleware(['scope:admin,moderator'])->put('/user/{userId}', 'UserController@update');
